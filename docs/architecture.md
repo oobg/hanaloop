@@ -55,6 +55,25 @@ Stack:
 - SQLite (local)
 - PostgreSQL (production)
 
+Architecture:
+
+- NestJS module-based architecture
+
+Modules:
+
+- activities
+- emission-factors
+- dashboard
+- import
+
+Rules:
+
+- Controllers handle HTTP request/response only
+- Services contain application logic
+- Prisma handles database access
+- PCF calculation logic should be isolated from controllers
+- Avoid unnecessary DDD/CQRS patterns for MVP
+
 ---
 
 ## Runtime
