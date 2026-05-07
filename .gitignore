@@ -1,5 +1,7 @@
 # dependencies
 node_modules/
+.pnp
+.pnp.js
 
 # build outputs
 dist/
@@ -26,6 +28,7 @@ coverage/
 
 # cache / temp
 .cache/
+.pnpm-store/
 .next/
 .parcel-cache/
 tmp/
@@ -33,6 +36,7 @@ temp/
 
 # OS / editor
 .DS_Store
+*.pem
 .idea/
 .vscode/
 
