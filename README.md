@@ -20,3 +20,8 @@ pnpm build
 pnpm lint
 pnpm check-types
 ```
+
+## DB 정책
+
+- 로컬: sqlite
+- 배포: postgresql
