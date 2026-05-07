@@ -102,6 +102,6 @@ Rules:
 
 ## Domain
 
-Business calculation logic must be isolated from UI components.
-
-Frontend components must not contain emission calculation logic.
+- Business calculation logic must be isolated from UI components
+- Frontend components must not contain emission calculation logic
+- PCF calculation logic should be shared or reusable between client and server when needed
