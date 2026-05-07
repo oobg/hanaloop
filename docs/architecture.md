@@ -26,6 +26,22 @@ Stack:
 - shadcn/ui
 - Framer Motion
 
+Architecture:
+
+- FSD-lite
+
+Layers:
+
+- app
+- pages
+- features
+- entities
+- shared
+
+Rules:
+
+- Avoid unnecessary layer separation for MVP
+
 ---
 
 ### apps/server
