@@ -1,33 +1,27 @@
 # Architecture
 
-## Monorepo
+## Application
 
-This project uses:
+### web
 
-- Turborepo
-- pnpm workspace
-
----
-
-## Applications
-
-### apps/client
-
-Frontend application.
+Web application.
 
 Stack:
 
+- Next.js 15
 - React 19.2
-- Vite 8
 - TypeScript 5.x
 - Tailwind CSS 4.1
 - Zustand 5
-- React Router v7
+- Prisma 6
+- SQLite (local)
+- PostgreSQL (production)
 - shadcn/ui
 - Framer Motion
 
 Architecture:
 
+- App Router
 - FSD-lite
 
 Layers:
@@ -41,38 +35,9 @@ Layers:
 Rules:
 
 - Avoid unnecessary layer separation for MVP
-
----
-
-### apps/server
-
-Backend API server.
-
-Stack:
-
-- NestJS 11
-- Prisma 6
-- SQLite (local)
-- PostgreSQL (production)
-
-Architecture:
-
-- NestJS module-based architecture
-
-Modules:
-
-- activities
-- emission-factors
-- dashboard
-- import
-
-Rules:
-
-- Controllers handle HTTP request/response only
-- Services contain application logic
-- Prisma handles database access
-- PCF calculation logic should be isolated from controllers
-- Avoid unnecessary DDD/CQRS patterns for MVP
+- Prefer simple and readable UI
+- Avoid excessive animation
+- Use consistent spacing and typography
 
 ---
 
@@ -96,7 +61,6 @@ Rules:
 - Shared TypeScript config
 - Shared domain terminology
 - Shared calculation rules
-- API-first architecture
 
 ---
 
@@ -104,4 +68,4 @@ Rules:
 
 - Business calculation logic must be isolated from UI components
 - Frontend components must not contain emission calculation logic
-- PCF calculation logic should be shared or reusable between client and server when needed
+- PCF calculation logic should be reusable across the application

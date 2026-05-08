@@ -1,18 +1,25 @@
-# Hanaloop Monorepo
+# Hanaloop
 
-Turborepo + pnpm 기반 모노레포입니다.
+Next.js 기반 PCF(Product Carbon Footprint) 대시보드 프로젝트입니다.
 
-## 구조
+## Stack
 
-- `apps/client`: React 프론트엔드
-- `apps/server`: Nest 백엔드
+- Next.js 16
+- React 19.2
+- TypeScript 5.x
+- Tailwind CSS 4.1
+- Prisma 6
+- SQLite (local)
+- PostgreSQL (production)
+- Zustand 5
+- shadcn/ui
 
-## 공통 설정
+## Architecture
 
-- 루트 `tsconfig.base.json`를 공통 TypeScript 설정으로 사용
-- 각 앱의 `tsconfig.json`에서 `extends`로 상속해서 사용
+- App Router
+- FSD-lite architecture
 
-## 명령어
+## Commands
 
 ```sh
 pnpm dev
@@ -21,7 +28,7 @@ pnpm lint
 pnpm check-types
 ```
 
-## DB 정책
+## Database Policy
 
-- 로컬: sqlite
-- 배포: postgresql
+- Local development: SQLite
+- Production environment: PostgreSQL
