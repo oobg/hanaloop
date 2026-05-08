@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/pages/dashboard/ui/*": ["./src/fsd-pages/dashboard/ui/*"]
     }
   },
   "include": [
