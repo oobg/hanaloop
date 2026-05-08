@@ -1,4 +1,4 @@
-import { DashboardLoading } from "@/pages/dashboard/ui/dashboard-loading";
+import { DashboardLoading } from "./_ui/dashboard-loading";
 
 export default function Loading() {
   return <DashboardLoading />;

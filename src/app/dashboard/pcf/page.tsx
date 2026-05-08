@@ -1,4 +1,4 @@
-import { PcfCatalogPage } from "@/pages/dashboard/ui/pcf-catalog-page";
+import { PcfCatalogPage } from "../_ui/pcf-catalog-page";
 
 export default function Page() {
   return <PcfCatalogPage />;
