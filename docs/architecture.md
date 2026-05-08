@@ -8,7 +8,7 @@ Web application.
 
 Stack:
 
-- Next.js 15
+- Next.js 16
 - React 19.2
 - TypeScript 5.x
 - Tailwind CSS 4.1
@@ -17,6 +17,9 @@ Stack:
 - SQLite (local)
 - PostgreSQL (production)
 - shadcn/ui
+- react-hook-form
+- zod
+- lucide-react
 - Framer Motion
 
 Architecture:
