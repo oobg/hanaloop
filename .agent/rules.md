@@ -25,6 +25,13 @@ Before implementation:
 
 ---
 
+## Generated Files
+
+- Do not modify generated Next.js files
+- Only modify source files under `src/`
+
+---
+
 ## Code Quality Rules
 
 - Use TypeScript strict mode
