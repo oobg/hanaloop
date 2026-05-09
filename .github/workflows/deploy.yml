@@ -41,7 +41,7 @@ jobs:
 
     env:
       DEPLOY_DIR: ${{ secrets.SERVER_DEFAULT_PATH }}/${{ github.ref_name }}-${{ secrets.PROJECT_NAME }}
-      SRC_ARCHIVE: source.tar.gz
+      SRC_ARCHIVE: /tmp/source.tar.gz
 
     steps:
       - uses: actions/checkout@v4
@@ -87,8 +87,8 @@ jobs:
           script: |
             set -e
             cd "${{ env.DEPLOY_DIR }}"
-            tar -xzf "${{ env.SRC_ARCHIVE }}" --overwrite
-            rm -f "${{ env.SRC_ARCHIVE }}"
+            tar -xzf source.tar.gz --overwrite
+            rm -f source.tar.gz
             docker compose up --build -d --remove-orphans
 
       - name: GitHub Summary
