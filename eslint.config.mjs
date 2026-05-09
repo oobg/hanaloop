@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "tmp/**",
     "next-env.d.ts",
     // Next.js CLI–generated types (see file headers; avoid lint drift on regen)
     "types/cache-life.d.ts",

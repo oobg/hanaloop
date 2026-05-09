@@ -1,20 +1,7 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-
-import { cn } from "@/shared/lib/utils";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "PCF 대시보드",
@@ -27,11 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="ko"
-      suppressHydrationWarning
-      className={cn("dark h-full", geistSans.variable, geistMono.variable)}
-    >
+    <html lang="ko" suppressHydrationWarning className="dark h-full">
       <body className="min-h-full">
         <Script id="color-scheme-init" strategy="beforeInteractive">
           {`(function(){

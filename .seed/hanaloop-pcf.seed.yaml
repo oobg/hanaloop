@@ -1,0 +1,86 @@
+version: "1.0"
+created_at: "2026-05-09"
+interview_mode: "path-b"
+
+goal: |
+  탄소 관리 플랫폼(Hanaloop) PCF 대시보드 구현.
+  활동 데이터 입력 → 배출계수 관리 → 서버사이드 PCF 자동 계산 → 인터랙티브 시각화.
+  대상: 실무자(데이터 입력/검토) + 경영자(요약/트렌드). 채용 과제 제출용.
+
+constraints:
+  - TypeScript + Next.js 16 (기존 프로젝트 스택 유지)
+  - pnpm 패키지 매니저
+  - Prisma + SQLite (로컬), 스키마는 PostgreSQL 호환 설계
+  - Recharts 차트 라이브러리
+  - FSD-lite 폴더 구조 (기존 scaffolding 유지)
+  - 인증 없음 (채용 과제 맥락)
+  - PCF 계산은 Next.js API Route 서버사이드에서만 실행
+
+acceptance_criteria:
+  - Prisma 스키마 (Product, EmissionFactor, ActivityData, PcfResult) 마이그레이션 완료
+  - CT-045 활동 데이터 29건 + 배출계수 4종 seed 데이터 적재
+  - 활동 데이터 수동 폼 입력 (zod validation + 에러 메시지 표시)
+  - 제공된 Excel(.xlsx) 형식 그대로 임포트 가능 (보너스)
+  - 배출계수 CRUD (validFrom/validTo 버전 이력 포함)
+  - "PCF 페이지에서 계산 버튼 클릭 시 기간 선택 후 서버사이드 계산 실행"
+  - "PCF 계산 = activity_amount × EmissionFactor(activityType+description 자동 매핑)"
+  - "메인 대시보드: 요약 카드(총 배출량/Scope 2/Scope 3/데이터 건수) + 월별 바차트(Recharts) + 최근 활동 테이블"
+  - "PCF 페이지: 제품 선택 드롭다운 + PCF 카드 + 월별 트렌드 라인차트 + Scope 파이차트"
+  - 모든 데이터 값 정확, 단위(kgCO2e) 표시 적절
+  - "README: 로컬 실행 5단계 이내 + AI 사용 내역 + 시스템 설계 + ERD"
+
+ontology_schema:
+  name: CarbonPlatform
+  description: 제품 탄소 발자국(PCF) 관리 도메인
+  fields:
+    - name: Product
+      type: entity
+      description: "제품 (code, name). CT-045 컴퓨터 화면이 시드 데이터."
+    - name: EmissionFactor
+      type: entity
+      description: "배출계수 (activityType, description, value, unit, validFrom, validTo)"
+    - name: ActivityData
+      type: entity
+      description: "활동 데이터 (productId, date, activityType, description, amount, unit)"
+    - name: PcfResult
+      type: entity
+      description: "PCF 계산 결과 (productId, periodStart, periodEnd, totalEmission, byScope, byCategory)"
+    - name: GhgScope
+      type: enum
+      description: "Scope 2=전기, Scope 3=원소재+운송"
+
+evaluation_principles:
+  - name: domain_accuracy
+    weight: 0.25
+    description: "PCF 계산 정확성, GHG Scope 분류 정확성, 단위 표시"
+  - name: system_design
+    weight: 0.30
+    description: "API 설계, 모듈 구조, 확장성/재사용성 (FSD-lite 준수)"
+  - name: ux_quality
+    weight: 0.25
+    description: "비전문가 직관성, 에러 처리, 시각화 명확성"
+  - name: explainability
+    weight: 0.20
+    description: "설계 결정 이유, trade-off, AI 활용 방식 기록"
+
+exit_conditions:
+  - name: checklist_complete
+    description: 과제 체크리스트 필수 항목 8개 모두 충족
+    criteria: 지원자 체크리스트의 필수 항목이 모두 구현되어 있다
+  - name: typescript_clean
+    description: TypeScript 컴파일 에러 없음
+    criteria: pnpm build 또는 tsc --noEmit 실행 시 에러 없이 통과한다
+  - name: dev_server_ok
+    description: 개발 서버 정상 실행
+    criteria: pnpm dev 실행 시 오류 없이 localhost:3000에서 대시보드가 열린다
+
+metadata:
+  ambiguity_score: 0.12
+  interview_questions: 10
+  interview_mode: path-b
+  product_scope: multi-product
+  chart_lib: recharts
+  db: prisma-sqlite
+  ef_linking: auto-map-by-activityType-description
+  pcf_trigger: manual-button
+  excel_import: original-format

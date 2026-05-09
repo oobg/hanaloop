@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ct045-ef-electricity-kr-2026",
+    "factorKey": "EF_ELECTRICITY_KR_AVERAGE",
+    "version": 1,
+    "activityType": "ELECTRICITY",
+    "description": "한국 전력 소비 평균 배출계수",
+    "value": 0.4594,
+    "unit": "kgCO2e/kWh",
+    "scope": "SCOPE_2",
+    "validFrom": "2026-01-01",
+    "validTo": null
+  },
+  {
+    "id": "ct045-ef-raw-material-display-2026",
+    "factorKey": "EF_RAW_MATERIAL_CT045_DISPLAY",
+    "version": 1,
+    "activityType": "RAW_MATERIAL",
+    "description": "CT-045 원소재 투입 평균 배출계수",
+    "value": 4.82,
+    "unit": "kgCO2e/kg",
+    "scope": "SCOPE_3",
+    "validFrom": "2026-01-01",
+    "validTo": null
+  },
+  {
+    "id": "ct045-ef-road-freight-2026",
+    "factorKey": "EF_TRANSPORT_CT045_FREIGHT",
+    "version": 1,
+    "activityType": "TRANSPORT",
+    "description": "부품 및 완제품 도로 운송 평균 배출계수",
+    "value": 0.162,
+    "unit": "kgCO2e/ton-km",
+    "scope": "SCOPE_3",
+    "validFrom": "2026-01-01",
+    "validTo": "2026-06-30"
+  },
+  {
+    "id": "ct045-ef-sea-freight-2026",
+    "factorKey": "EF_TRANSPORT_CT045_FREIGHT",
+    "version": 2,
+    "activityType": "TRANSPORT",
+    "description": "수출 해상 간선 운송 평균 배출계수",
+    "value": 0.018,
+    "unit": "kgCO2e/ton-km",
+    "scope": "SCOPE_3",
+    "validFrom": "2026-07-01",
+    "validTo": null
+  }
+]
