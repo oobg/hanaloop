@@ -1,13 +1,13 @@
 services:
   app:
-    build: .
+    image: hanaloop:latest
     environment:
       NODE_ENV: production
       DATABASE_URL: file:/app/data/hanaloop.db
-      SEED: "true"           # 최초 실행 시 시드 데이터 삽입. 이미 데이터가 있으면 "false"로 변경
+      SEED: "true"
     container_name: hanaloop
     volumes:
-      - db_data:/app/data    # SQLite DB 영속화
+      - db_data:/app/data
     restart: unless-stopped
     networks:
       # - default
