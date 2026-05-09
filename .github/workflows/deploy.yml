@@ -85,16 +85,11 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             set -e
-            echo "=== 권한 진단 ==="
-            whoami
-            ls -la "$(dirname "${{ env.DEPLOY_DIR }}")" | tail -5
-            echo "=== 디렉토리 생성 ==="
+            # root 소유로 잘못 생성된 경우 삭제 후 재생성 (부모 그룹 쓰기 권한으로 가능)
+            rm -rf "${{ env.DEPLOY_DIR }}"
             mkdir -p "${{ env.DEPLOY_DIR }}"
-            ls -la "${{ env.DEPLOY_DIR }}"
-            echo "=== 압축 해제 ==="
             tar -xzf "/tmp/${{ env.SRC_ARCHIVE }}" -C "${{ env.DEPLOY_DIR }}"
             rm -f "/tmp/${{ env.SRC_ARCHIVE }}"
-            echo "=== 도커 빌드 ==="
             cd "${{ env.DEPLOY_DIR }}"
             docker compose up --build -d --remove-orphans
 
