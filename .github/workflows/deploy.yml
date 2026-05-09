@@ -85,13 +85,14 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             set -e
-            # root 소유로 잘못 생성된 경우 삭제 후 재생성 (부모 그룹 쓰기 권한으로 가능)
-            rm -rf "${{ env.DEPLOY_DIR }}"
-            mkdir -p "${{ env.DEPLOY_DIR }}"
-            tar -xzf "/tmp/${{ env.SRC_ARCHIVE }}" -C "${{ env.DEPLOY_DIR }}"
+            WORK_DIR=/tmp/hanaloop-build
+            rm -rf "$WORK_DIR"
+            mkdir -p "$WORK_DIR"
+            tar -xzf "/tmp/${{ env.SRC_ARCHIVE }}" -C "$WORK_DIR"
             rm -f "/tmp/${{ env.SRC_ARCHIVE }}"
-            cd "${{ env.DEPLOY_DIR }}"
-            docker compose up --build -d --remove-orphans
+            cd "$WORK_DIR"
+            docker compose -p hanaloop up --build -d --remove-orphans
+            rm -rf "$WORK_DIR"
 
       - name: GitHub Summary
         shell: bash
