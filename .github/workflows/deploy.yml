@@ -66,7 +66,7 @@ jobs:
         with:
           name: source
 
-      - name: Upload to server
+      - name: Upload to server /tmp
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -74,7 +74,7 @@ jobs:
           username: ${{ secrets.SSH_USER_NAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           source: "${{ env.SRC_ARCHIVE }}"
-          target: "${{ env.DEPLOY_DIR }}"
+          target: "/tmp"
 
       - name: Extract & build on server
         uses: appleboy/ssh-action@v1.0.0
@@ -85,9 +85,17 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             set -e
+            echo "=== 권한 진단 ==="
+            whoami
+            ls -la "$(dirname "${{ env.DEPLOY_DIR }}")" | tail -5
+            echo "=== 디렉토리 생성 ==="
+            mkdir -p "${{ env.DEPLOY_DIR }}"
+            ls -la "${{ env.DEPLOY_DIR }}"
+            echo "=== 압축 해제 ==="
+            tar -xzf "/tmp/${{ env.SRC_ARCHIVE }}" -C "${{ env.DEPLOY_DIR }}"
+            rm -f "/tmp/${{ env.SRC_ARCHIVE }}"
+            echo "=== 도커 빌드 ==="
             cd "${{ env.DEPLOY_DIR }}"
-            tar -xzf "${{ env.SRC_ARCHIVE }}" --overwrite
-            rm -f "${{ env.SRC_ARCHIVE }}"
             docker compose up --build -d --remove-orphans
 
       - name: GitHub Summary
