@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      network: host
+    build: .
     environment:
       NODE_ENV: production
       DATABASE_URL: file:/app/data/hanaloop.db
