@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ── 1. 타입 체크 + 린트 ────────────────────────────────────────────────────────
+  # ── 1. 타입 체크 + 린트 + 소스 압축 ───────────────────────────────────────────
   verify:
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +34,24 @@ jobs:
       - name: Lint
         run: yarn lint
 
-  # ── 2. 소스 압축 → SCP → 서버 빌드 ───────────────────────────────────────────
+      - name: Compress source
+        run: |
+          tar --exclude='.git' \
+              --exclude='node_modules' \
+              --exclude='.next' \
+              --exclude='*.db' \
+              --exclude='.env*' \
+              --exclude='docs/screenshots' \
+              -czf /tmp/source.tar.gz .
+
+      - name: Upload source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: source
+          path: /tmp/source.tar.gz
+          retention-days: 1
+
+  # ── 2. 아티팩트 다운로드 → SCP → 서버 빌드 ────────────────────────────────────
   deploy:
     runs-on: ubuntu-latest
     needs: verify
@@ -44,28 +61,22 @@ jobs:
       SRC_ARCHIVE: source.tar.gz
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Download source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: source
+          path: /tmp
 
-      - name: Compress source
-        run: |
-          tar --exclude='.git' \
-              --exclude='node_modules' \
-              --exclude='.next' \
-              --exclude='*.db' \
-              --exclude='.env*' \
-              --exclude='docs/screenshots' \
-              --exclude='source.tar.gz' \
-              -czf ${{ env.SRC_ARCHIVE }} .
-
-      - name: Upload source archive
+      - name: Upload to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER_NAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "${{ env.SRC_ARCHIVE }}"
+          source: "/tmp/${{ env.SRC_ARCHIVE }}"
           target: "${{ env.DEPLOY_DIR }}"
+          strip_components: 2
 
       - name: Extract & build on server
         uses: appleboy/ssh-action@v1.0.0
