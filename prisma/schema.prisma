@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id           String         @id @default(cuid())
+  code         String         @unique
+  name         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  activityData ActivityData[]
+  pcfResults   PcfResult[]
+
+  @@index([name])
+  @@map("products")
+}
+
+model EmissionFactor {
+  id           String         @id @default(cuid())
+  activityType String
+  description  String
+  value        Decimal
+  unit         String
+  scope        String
+  validFrom    DateTime
+  validTo      DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  activityData ActivityData[]
+
+  @@unique([activityType, unit, validFrom])
+  @@index([activityType, validFrom, validTo])
+  @@index([scope])
+  @@map("emission_factors")
+}
+
+model ActivityData {
+  id               String         @id @default(cuid())
+  productId        String
+  emissionFactorId String?
+  date             DateTime
+  activityType     String
+  description      String
+  amount           Decimal
+  unit             String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  product          Product        @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([productId, date])
+  @@index([activityType, date])
+  @@index([emissionFactorId])
+  @@map("activity_data")
+}
+
+model PcfResult {
+  id            String   @id @default(cuid())
+  productId     String
+  periodStart   DateTime
+  periodEnd     DateTime
+  totalEmission Decimal
+  byScope       Json
+  byCategory    Json
+  calculatedAt  DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([productId, periodStart, periodEnd])
+  @@index([periodStart, periodEnd])
+  @@map("pcf_results")
+}
