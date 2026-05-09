@@ -54,6 +54,7 @@ jobs:
               --exclude='*.db' \
               --exclude='.env*' \
               --exclude='docs/screenshots' \
+              --exclude='source.tar.gz' \
               -czf ${{ env.SRC_ARCHIVE }} .
 
       - name: Upload source archive
