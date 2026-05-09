@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "test": "pnpm test:unit",
+    "test": "yarn test:unit",
     "test:unit": "rm -rf tmp/test-build && tsc -p tsconfig.test.json && node --test tmp/test-build/tests/**/*.test.js",
     "lint": "eslint",
     "check-types": "tsc --noEmit",
@@ -54,7 +54,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "yarn@1.22.22",
   "engines": {
     "node": ">=18"
   },

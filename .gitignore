@@ -12,6 +12,8 @@ node_modules/
 
 # package manager
 .pnpm-store/
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 # build outputs
 .next/
