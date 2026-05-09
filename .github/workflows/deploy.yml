@@ -34,16 +34,50 @@ jobs:
       - name: Lint
         run: yarn lint
 
-  # ── 2. 서버 배포 (git pull + docker build on server) ──────────────────────────
+  # ── 2. 소스 압축 → SCP → 서버 빌드 ───────────────────────────────────────────
   deploy:
     runs-on: ubuntu-latest
     needs: verify
 
     env:
       DEPLOY_DIR: ${{ secrets.SERVER_DEFAULT_PATH }}/${{ github.ref_name }}-${{ secrets.PROJECT_NAME }}
+      SRC_ARCHIVE: source.tar.gz
 
     steps:
-      - name: Deploy via SSH
+      - uses: actions/checkout@v4
+
+      - name: Compress source
+        run: |
+          tar --exclude='.git' \
+              --exclude='node_modules' \
+              --exclude='.next' \
+              --exclude='*.db' \
+              --exclude='.env*' \
+              --exclude='docs/screenshots' \
+              -czf ${{ env.SRC_ARCHIVE }} .
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Create deploy directory on server
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SSH_PORT }} \
+            ${{ secrets.SSH_USER_NAME }}@${{ secrets.SSH_HOST }} \
+            "mkdir -p \"${{ env.DEPLOY_DIR }}\""
+
+      - name: Upload source archive
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e scp -o StrictHostKeyChecking=no \
+            -P ${{ secrets.SSH_PORT }} \
+            "${{ env.SRC_ARCHIVE }}" \
+            ${{ secrets.SSH_USER_NAME }}@${{ secrets.SSH_HOST }}:"${{ env.DEPLOY_DIR }}/"
+
+      - name: Extract & build on server
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -52,19 +86,9 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             set -e
-            DEPLOY_DIR="${{ env.DEPLOY_DIR }}"
-
-            mkdir -p "$DEPLOY_DIR"
-            cd "$DEPLOY_DIR"
-
-            # 최초 배포는 clone, 이후는 pull
-            if [ ! -d ".git" ]; then
-              git clone https://github.com/${{ github.repository }}.git .
-            else
-              git fetch origin
-              git reset --hard origin/${{ github.ref_name }}
-            fi
-
+            cd "${{ env.DEPLOY_DIR }}"
+            tar -xzf "${{ env.SRC_ARCHIVE }}" --overwrite
+            rm -f "${{ env.SRC_ARCHIVE }}"
             docker compose up --build -d --remove-orphans
 
       - name: GitHub Summary
