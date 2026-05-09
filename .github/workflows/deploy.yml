@@ -50,7 +50,9 @@ jobs:
         run: docker build -t hanaloop:latest .
 
       - name: Save & compress image
-        run: docker save hanaloop:latest | gzip > ${{ env.IMAGE_FILE }}
+        run: |
+          docker save hanaloop:latest | gzip > ${{ env.IMAGE_FILE }}
+          chmod 644 ${{ env.IMAGE_FILE }}
 
       - name: Create deploy directory on server
         uses: appleboy/ssh-action@v1.0.0
