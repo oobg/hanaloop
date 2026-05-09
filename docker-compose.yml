@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: file:/app/data/hanaloop.db
+      SEED: "true"           # 최초 실행 시 시드 데이터 삽입. 이미 데이터가 있으면 "false"로 변경
+    volumes:
+      - db_data:/app/data    # SQLite DB 영속화
+    restart: unless-stopped
+
+volumes:
+  db_data:

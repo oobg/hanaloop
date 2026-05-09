@@ -44,6 +44,21 @@ API 문서는 `http://localhost:3000/docs` (Swagger UI)
 
 ---
 
+## Docker로 실행
+
+```sh
+# 이미지 빌드 + 컨테이너 시작 (최초 실행 — 시드 데이터 포함)
+docker compose up --build
+
+# 이미 데이터가 있을 때 (시드 제외)
+SEED=false docker compose up
+```
+
+`docker-compose.yml`의 `SEED: "true"` 환경변수로 최초 시드 여부를 제어합니다.  
+SQLite DB는 Docker 볼륨 `db_data`에 영속화되어 컨테이너 재시작 후에도 유지됩니다.
+
+---
+
 ## 주요 기능
 
 | 페이지 | 경로 | 기능 |

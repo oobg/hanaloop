@@ -52,6 +52,7 @@
     "prisma": "^5.22.0",
     "tailwindcss": "^4",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "packageManager": "yarn@1.22.22",
