@@ -24,10 +24,10 @@
 
 ```sh
 # 1. 의존성 설치
-pnpm install
+yarn install
 
 # 2. 환경변수 확인 — .env 파일이 이미 포함되어 있습니다
-#    DATABASE_URL="file:./prisma/dev.db"
+#    DATABASE_URL="file:./dev.db"
 
 # 3. DB 스키마 생성
 npx prisma db push
@@ -36,14 +36,11 @@ npx prisma db push
 npx tsx prisma/seed.ts
 
 # 5. 개발 서버 시작
-pnpm dev
+yarn dev
 ```
 
 브라우저에서 `http://localhost:3000/dashboard` 접속.  
 API 문서는 `http://localhost:3000/docs` (Swagger UI)
-
-> **yarn을 쓰는 경우**: `pnpm` 대신 `yarn` 명령어를 그대로 사용할 수 있습니다.  
-> `yarn install` → `yarn dev` 순서로 실행하세요. 단계 3·4는 `npx` 명령으로 동일하게 실행됩니다.
 
 ---
 
