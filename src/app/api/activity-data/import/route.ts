@@ -43,7 +43,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: null });
+  // 헤더 행 위치를 동적으로 탐색 (시트 상단에 제목/설명 행이 있을 수 있음)
+  const rawMatrix = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, defval: null });
+  const headerRowIndex = rawMatrix.findIndex(
+    (r) => Array.isArray(r) && r.some((cell) => String(cell ?? "").includes("일자")),
+  );
+  if (headerRowIndex === -1) {
+    return NextResponse.json(
+      { ok: false, error: "헤더 행('일자(원본)' 컬럼)을 찾을 수 없습니다." },
+      { status: 422 },
+    );
+  }
+  const headers = rawMatrix[headerRowIndex] as (string | null)[];
+  const dataMatrix = rawMatrix.slice(headerRowIndex + 1);
+  const rows: Record<string, unknown>[] = dataMatrix.map((r) => {
+    const arr = r as unknown[];
+    return Object.fromEntries(headers.map((h, i) => [String(h ?? i), arr[i] ?? null]));
+  });
 
   const emissionFactors = await prisma.emissionFactor.findMany();
   const efByKey = Object.fromEntries(emissionFactors.map((f) => [f.factorKey, f]));
