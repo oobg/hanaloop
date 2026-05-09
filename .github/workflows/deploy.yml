@@ -41,7 +41,7 @@ jobs:
 
     env:
       DEPLOY_DIR: ${{ secrets.SERVER_DEFAULT_PATH }}/${{ github.ref_name }}-${{ secrets.PROJECT_NAME }}
-      SRC_ARCHIVE: /tmp/source.tar.gz
+      SRC_ARCHIVE: source.tar.gz
 
     steps:
       - uses: actions/checkout@v4
@@ -56,26 +56,15 @@ jobs:
               --exclude='docs/screenshots' \
               -czf ${{ env.SRC_ARCHIVE }} .
 
-      - name: Install sshpass
-        run: sudo apt-get install -y sshpass
-
-      - name: Create deploy directory on server
-        env:
-          SSHPASS: ${{ secrets.SSH_PASSWORD }}
-        run: |
-          sshpass -e ssh -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SSH_PORT }} \
-            ${{ secrets.SSH_USER_NAME }}@${{ secrets.SSH_HOST }} \
-            "mkdir -p \"${{ env.DEPLOY_DIR }}\""
-
       - name: Upload source archive
-        env:
-          SSHPASS: ${{ secrets.SSH_PASSWORD }}
-        run: |
-          sshpass -e scp -o StrictHostKeyChecking=no \
-            -P ${{ secrets.SSH_PORT }} \
-            "${{ env.SRC_ARCHIVE }}" \
-            ${{ secrets.SSH_USER_NAME }}@${{ secrets.SSH_HOST }}:"${{ env.DEPLOY_DIR }}/"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER_NAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "${{ env.SRC_ARCHIVE }}"
+          target: "${{ env.DEPLOY_DIR }}"
 
       - name: Extract & build on server
         uses: appleboy/ssh-action@v1.0.0
@@ -87,8 +76,8 @@ jobs:
           script: |
             set -e
             cd "${{ env.DEPLOY_DIR }}"
-            tar -xzf source.tar.gz --overwrite
-            rm -f source.tar.gz
+            tar -xzf "${{ env.SRC_ARCHIVE }}" --overwrite
+            rm -f "${{ env.SRC_ARCHIVE }}"
             docker compose up --build -d --remove-orphans
 
       - name: GitHub Summary
