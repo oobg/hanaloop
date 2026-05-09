@@ -1,5 +1,5 @@
 # ── Stage 1: deps ──────────────────────────────────────────────────────────────
-FROM node:20-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 
 # Prisma 네이티브 바이너리 실행을 위한 Alpine 호환 라이브러리
@@ -9,7 +9,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # ── Stage 2: builder ───────────────────────────────────────────────────────────
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat openssl
@@ -25,7 +25,7 @@ RUN npx prisma generate
 RUN yarn build
 
 # ── Stage 3: runner ────────────────────────────────────────────────────────────
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat openssl
