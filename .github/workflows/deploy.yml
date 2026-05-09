@@ -65,7 +65,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: source
-          path: /tmp
 
       - name: Upload to server
         uses: appleboy/scp-action@v0.1.7
@@ -74,9 +73,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER_NAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "/tmp/${{ env.SRC_ARCHIVE }}"
+          source: "${{ env.SRC_ARCHIVE }}"
           target: "${{ env.DEPLOY_DIR }}"
-          strip_components: 2
 
       - name: Extract & build on server
         uses: appleboy/ssh-action@v1.0.0
