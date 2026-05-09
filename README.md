@@ -26,9 +26,17 @@ pnpm dev
 pnpm build
 pnpm lint
 pnpm check-types
+pnpm db:seed:ct045
 ```
 
 ## Database Policy
 
 - Local development: SQLite
 - Production environment: PostgreSQL
+
+## Seed Data
+
+`pnpm db:seed:ct045` loads the CT-045 product, 4 emission-factor rows, and 29
+activity-data rows from `prisma/seed-ct045-activity-data.sql` into the local
+SQLite database. The seed SQL is idempotent, so it can be run repeatedly after
+the schema migration has been applied.

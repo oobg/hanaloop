@@ -22,6 +22,8 @@ model Product {
 
 model EmissionFactor {
   id           String         @id @default(cuid())
+  factorKey    String
+  version      Int
   activityType String
   description  String
   value        Decimal
@@ -33,7 +35,9 @@ model EmissionFactor {
   updatedAt    DateTime       @updatedAt
   activityData ActivityData[]
 
-  @@unique([activityType, unit, validFrom])
+  @@unique([factorKey, version])
+  @@unique([factorKey, validFrom])
+  @@index([factorKey, validFrom, validTo])
   @@index([activityType, validFrom, validTo])
   @@index([scope])
   @@map("emission_factors")

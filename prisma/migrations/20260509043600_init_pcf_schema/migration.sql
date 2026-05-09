@@ -10,6 +10,8 @@ CREATE TABLE "products" (
 -- CreateTable
 CREATE TABLE "emission_factors" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "factorKey" TEXT NOT NULL,
+    "version" INTEGER NOT NULL,
     "activityType" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "value" DECIMAL NOT NULL,
@@ -59,7 +61,13 @@ CREATE UNIQUE INDEX "products_code_key" ON "products"("code");
 CREATE INDEX "products_name_idx" ON "products"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "emission_factors_activityType_unit_validFrom_key" ON "emission_factors"("activityType", "unit", "validFrom");
+CREATE UNIQUE INDEX "emission_factors_factorKey_version_key" ON "emission_factors"("factorKey", "version");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "emission_factors_factorKey_validFrom_key" ON "emission_factors"("factorKey", "validFrom");
+
+-- CreateIndex
+CREATE INDEX "emission_factors_factorKey_validFrom_validTo_idx" ON "emission_factors"("factorKey", "validFrom", "validTo");
 
 -- CreateIndex
 CREATE INDEX "emission_factors_activityType_validFrom_validTo_idx" ON "emission_factors"("activityType", "validFrom", "validTo");
