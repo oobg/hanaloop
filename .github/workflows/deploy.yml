@@ -54,24 +54,26 @@ jobs:
           docker save hanaloop:latest | gzip > ${{ env.IMAGE_FILE }}
           chmod 644 ${{ env.IMAGE_FILE }}
 
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
       - name: Create deploy directory on server
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER_NAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: mkdir -p "${{ env.DEPLOY_DIR }}"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SSH_PORT }} \
+            ${{ secrets.SSH_USER_NAME }}@${{ secrets.SSH_HOST }} \
+            "mkdir -p \"${{ env.DEPLOY_DIR }}\""
 
       - name: Upload image + compose file
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER_NAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          source: "${{ env.IMAGE_FILE }},docker-compose.deploy.yml"
-          target: ${{ env.DEPLOY_DIR }}
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e scp -o StrictHostKeyChecking=no \
+            -P ${{ secrets.SSH_PORT }} \
+            "${{ env.IMAGE_FILE }}" docker-compose.deploy.yml \
+            ${{ secrets.SSH_USER_NAME }}@${{ secrets.SSH_HOST }}:"${{ env.DEPLOY_DIR }}/"
 
       - name: Load image & restart container
         uses: appleboy/ssh-action@v1.0.0
