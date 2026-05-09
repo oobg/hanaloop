@@ -31,6 +31,8 @@ const eslintConfig = defineConfig([
       "import/first": "error",
       "import/newline-after-import": "error",
       "import/no-duplicates": "error",
+      // useEffect 내 setLoading 같은 표준 async fetch 패턴을 허용
+      "react-hooks/set-state-in-effect": "warn",
     },
   },
 ]);

@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { RefreshCw, Plus } from "lucide-react";
+import { Plus,RefreshCw } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/card";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "@/shared/ui/card";
+
 import { DashboardTopBar } from "./dashboard-top-bar";
 
 type EmissionFactor = {
@@ -62,7 +63,10 @@ export function EmissionFactorCatalogPage() {
 
   const factorKey = `EF_${form.activityType}_${form.description.toUpperCase().replace(/\s+/g, "_")}`;
 
-  const refresh = useCallback(() => {
+  const [tick, setTick] = useState(0);
+  const refresh = useCallback(() => setTick((t) => t + 1), []);
+
+  useEffect(() => {
     setLoading(true);
     fetch(`/api/emission-factors${activeOnly ? "?activeOnly=true" : ""}`)
       .then((r) => r.json())
@@ -71,9 +75,7 @@ export function EmissionFactorCatalogPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [activeOnly]);
-
-  useEffect(() => { refresh(); }, [refresh]);
+  }, [tick, activeOnly]);
 
   const handleActivityTypeChange = (type: string) => {
     setForm((f) => ({
@@ -214,9 +216,7 @@ export function EmissionFactorCatalogPage() {
                 </tr>
               </thead>
               <tbody>
-                {factors.map((f) => {
-                  const isActive = !f.validTo || new Date(f.validTo) >= new Date();
-                  return (
+                {factors.map((f) => (
                     <tr key={f.id} className="border-b last:border-0 hover:bg-muted/30">
                       <td className="py-1.5 pr-3">
                         <Badge variant="outline">{ACTIVITY_LABELS[f.activityType] ?? f.activityType}</Badge>
@@ -240,8 +240,7 @@ export function EmissionFactorCatalogPage() {
                         )}
                       </td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           )}

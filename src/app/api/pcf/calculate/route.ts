@@ -1,6 +1,6 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { Decimal } from "@prisma/client/runtime/library";
 
 import { prisma } from "@/shared/lib/prisma";
 

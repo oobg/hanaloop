@@ -1,26 +1,25 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { Calculator, RefreshCw } from "lucide-react";
+import { useCallback,useEffect, useState } from "react";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  LineChart,
-  Line,
 } from "recharts";
-import { Calculator, RefreshCw } from "lucide-react";
 
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/card";
 import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "@/shared/ui/card";
+
 import { DashboardTopBar } from "./dashboard-top-bar";
 
 type Product = { id: string; code: string; name: string };

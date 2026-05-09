@@ -1,5 +1,4 @@
 import { type ActivityDataInput, type ActivityType } from "../../activity-data";
-
 import { validatedCt045EmissionFactorSeedRows } from "./ct045-emission-factor-seed";
 
 export type EmissionFactorMappingInput = Pick<

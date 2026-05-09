@@ -1,20 +1,21 @@
 "use client";
 
+import { Database,Package, Truck, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { Zap, Package, Truck, Database } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/card";
 import { Badge } from "@/shared/ui/badge";
+import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "@/shared/ui/card";
+
 import { DashboardTopBar } from "./dashboard-top-bar";
 
 type ActivityRow = {
@@ -42,24 +43,13 @@ const ACTIVITY_LABELS: Record<string, string> = {
   TRANSPORT: "운송",
 };
 
-const SCOPE_LABELS: Record<string, string> = {
-  ELECTRICITY: "Scope 2",
-  RAW_MATERIAL: "Scope 3",
-  TRANSPORT: "Scope 3",
-};
-
 const CATEGORY_COLORS: Record<string, string> = {
   ELECTRICITY: "#6366f1",
   RAW_MATERIAL: "#10b981",
   TRANSPORT: "#f59e0b",
 };
 
-const EF_MAP: Record<string, number> = {
-  ELECTRICITY: 0.456,
-  RAW_MATERIAL_1: 2.3,
-  RAW_MATERIAL_2: 3.2,
-  TRANSPORT: 3.5,
-};
+
 
 function calcEmission(row: ActivityRow): number {
   const ef = row.emissionFactor ? Number(row.emissionFactor.value) : null;

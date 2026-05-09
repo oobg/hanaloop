@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { Plus, Upload, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw,Upload } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 import { ActivityDataManualForm } from "@/features/activity-manual-entry/ui/activity-data-manual-form";
 import { ExcelUploadCard } from "@/features/activity-upload/ui/excel-upload-card";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/card";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "@/shared/ui/card";
+
 import { DashboardTopBar } from "./dashboard-top-bar";
 
 const ACTIVITY_LABELS: Record<string, string> = {
@@ -41,7 +42,10 @@ export function ActivityDataCatalogPage() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"list" | "form" | "upload">("list");
 
-  const refresh = useCallback(() => {
+  const [tick, setTick] = useState(0);
+  const refresh = useCallback(() => setTick((t) => t + 1), []);
+
+  useEffect(() => {
     setLoading(true);
     fetch("/api/activity-data")
       .then((r) => r.json())
@@ -50,11 +54,7 @@ export function ActivityDataCatalogPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
+  }, [tick]);
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8">

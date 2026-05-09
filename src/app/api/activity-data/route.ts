@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { prisma } from "@/shared/lib/prisma";
 import { activityDataInputSchema } from "@/entities/activity-data";
 import { mapActivityDataToEmissionFactor } from "@/entities/emission-factor";
+import { prisma } from "@/shared/lib/prisma";
 
 export const runtime = "nodejs";
 

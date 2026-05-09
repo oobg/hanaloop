@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { activityTypeSchema } from "../../activity-data";
-
 import ct045EmissionFactorSeedRowsJson from "./ct045-emission-factor-seed.json";
 
 export const ghgScopeSchema = z.enum(["SCOPE_2", "SCOPE_3"]);
